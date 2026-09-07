@@ -1,0 +1,77 @@
+{
+  "project": "Intelligent Crop Disease Diagnosis",
+  "best_model": "VGG16",
+  "image_size": [
+    224,
+    224
+  ],
+  "num_classes": 9,
+  "class_names": [
+    "cassava__cbb",
+    "cassava__cbsd",
+    "cassava__cgm",
+    "cassava__cmd",
+    "cassava__healthy",
+    "maize__Blight",
+    "maize__Common_Rust",
+    "maize__Gray_Leaf_Spot",
+    "maize__Healthy"
+  ],
+  "class_to_index": {
+    "cassava__cbb": 0,
+    "cassava__cbsd": 1,
+    "cassava__cgm": 2,
+    "cassava__cmd": 3,
+    "cassava__healthy": 4,
+    "maize__Blight": 5,
+    "maize__Common_Rust": 6,
+    "maize__Gray_Leaf_Spot": 7,
+    "maize__Healthy": 8
+  },
+  "index_to_class": {
+    "0": "cassava__cbb",
+    "1": "cassava__cbsd",
+    "2": "cassava__cgm",
+    "3": "cassava__cmd",
+    "4": "cassava__healthy",
+    "5": "maize__Blight",
+    "6": "maize__Common_Rust",
+    "7": "maize__Gray_Leaf_Spot",
+    "8": "maize__Healthy"
+  },
+  "model_file": "model.keras",
+  "framework": "TensorFlow/Keras",
+  "metrics": [
+    {
+      "model": "VGG16",
+      "accuracy": 0.85200146896805,
+      "precision_weighted": 0.8580770314754578,
+      "recall_weighted": 0.85200146896805,
+      "f1_weighted": 0.8520504170808442,
+      "precision_macro": 0.8183823073367273,
+      "recall_macro": 0.825343496996324,
+      "f1_macro": 0.815443640117464
+    },
+    {
+      "model": "ResNet50",
+      "accuracy": 0.8479618068307014,
+      "precision_weighted": 0.8497207159916358,
+      "recall_weighted": 0.8479618068307014,
+      "f1_weighted": 0.8450837128899765,
+      "precision_macro": 0.8201866736339514,
+      "recall_macro": 0.8189563091815942,
+      "f1_macro": 0.8121897473659253
+    },
+    {
+      "model": "MobileNetV2",
+      "accuracy": 0.8325376423062798,
+      "precision_weighted": 0.8401411177963992,
+      "recall_weighted": 0.8325376423062798,
+      "f1_weighted": 0.8333635669824326,
+      "precision_macro": 0.8028917620575444,
+      "recall_macro": 0.8183380067363628,
+      "f1_macro": 0.8029717645149803
+    }
+  ],
+  "preprocessing_required": "tf.keras.applications.vgg16.preprocess_input"
+}
