@@ -1,11 +1,13 @@
+```python
 """
+AgroVision AI
+-------------
 Smart Agriculture Crop Disease Diagnosis
------------------------------------------
 
-Streamlit inference app for automated cassava and maize leaf disease
-classification.
+Streamlit inference app for automated cassava and maize
+leaf disease classification.
 
-GitHub:
+Required GitHub files:
     app.py
     requirements.txt
     class_names.json
@@ -18,6 +20,10 @@ Run locally:
     streamlit run app.py
 """
 
+# ============================================================
+# IMPORTS
+# ============================================================
+
 import json
 from pathlib import Path
 
@@ -27,33 +33,22 @@ import tensorflow as tf
 from PIL import Image
 from huggingface_hub import hf_hub_download
 
+
 # ============================================================
 # CONFIGURATION
 # ============================================================
 
-APP_DIR = Path(__file__).parent
+APP_DIR = Path(__file__).resolve().parent
 
 CLASS_NAMES_PATH = APP_DIR / "class_names.json"
 METADATA_PATH = APP_DIR / "metadata.json"
-
 
 HF_REPO_ID = "Iroh-Emmanuel/CASSAVA-AND-MAIZE-DISEASES-DETECTION-MODEL"
 HF_MODEL_FILENAME = "model.keras"
 
 
 # ============================================================
-# MODEL PREPROCESSING
-# ============================================================
-
-PREPROCESS_FUNCS = {
-    "ResNet50": tf.keras.applications.resnet50.preprocess_input,
-    "MobileNetV2": tf.keras.applications.mobilenet_v2.preprocess_input,
-    "VGG16": tf.keras.applications.vgg16.preprocess_input,
-}
-
-
-# ============================================================
-# PAGE CONFIG
+# PAGE CONFIGURATION
 # ============================================================
 
 st.set_page_config(
@@ -65,6 +60,17 @@ st.set_page_config(
 
 
 # ============================================================
+# MODEL PREPROCESSING FUNCTIONS
+# ============================================================
+
+PREPROCESS_FUNCS = {
+    "ResNet50": tf.keras.applications.resnet50.preprocess_input,
+    "MobileNetV2": tf.keras.applications.mobilenet_v2.preprocess_input,
+    "VGG16": tf.keras.applications.vgg16.preprocess_input,
+}
+
+
+# ============================================================
 # CUSTOM CSS
 # ============================================================
 
@@ -72,9 +78,9 @@ st.markdown(
     """
     <style>
 
-    /* -------------------------------------------------------
+    /* ======================================================
        GLOBAL
-    ------------------------------------------------------- */
+    ====================================================== */
 
     .stApp {
         background:
@@ -110,9 +116,9 @@ st.markdown(
     }
 
 
-    /* -------------------------------------------------------
+    /* ======================================================
        SIDEBAR
-    ------------------------------------------------------- */
+    ====================================================== */
 
     section[data-testid="stSidebar"] {
         background:
@@ -191,9 +197,9 @@ st.markdown(
     }
 
 
-    /* -------------------------------------------------------
+    /* ======================================================
        HERO
-    ------------------------------------------------------- */
+    ====================================================== */
 
     .hero {
         position: relative;
@@ -280,9 +286,9 @@ st.markdown(
     }
 
 
-    /* -------------------------------------------------------
+    /* ======================================================
        SECTION HEADERS
-    ------------------------------------------------------- */
+    ====================================================== */
 
     .section-label {
         color: #338447;
@@ -307,9 +313,9 @@ st.markdown(
     }
 
 
-    /* -------------------------------------------------------
+    /* ======================================================
        CROP CARDS
-    ------------------------------------------------------- */
+    ====================================================== */
 
     .crop-card {
         border-radius: 18px;
@@ -339,9 +345,9 @@ st.markdown(
     }
 
 
-    /* -------------------------------------------------------
+    /* ======================================================
        UPLOAD AREA
-    ------------------------------------------------------- */
+    ====================================================== */
 
     [data-testid="stFileUploader"] {
         background: white;
@@ -357,9 +363,9 @@ st.markdown(
     }
 
 
-    /* -------------------------------------------------------
+    /* ======================================================
        RESULT CARDS
-    ------------------------------------------------------- */
+    ====================================================== */
 
     .result-card {
         background: white;
@@ -394,9 +400,9 @@ st.markdown(
     }
 
 
-    /* -------------------------------------------------------
+    /* ======================================================
        METRIC CARDS
-    ------------------------------------------------------- */
+    ====================================================== */
 
     .metric-card {
         background: white;
@@ -425,9 +431,9 @@ st.markdown(
     }
 
 
-    /* -------------------------------------------------------
+    /* ======================================================
        INFO BOX
-    ------------------------------------------------------- */
+    ====================================================== */
 
     .info-box {
         background: #edf7ee;
@@ -441,9 +447,9 @@ st.markdown(
     }
 
 
-    /* -------------------------------------------------------
+    /* ======================================================
        FOOTER
-    ------------------------------------------------------- */
+    ====================================================== */
 
     .footer {
         text-align: center;
@@ -459,9 +465,9 @@ st.markdown(
     }
 
 
-    /* -------------------------------------------------------
+    /* ======================================================
        STREAMLIT BUTTON
-    ------------------------------------------------------- */
+    ====================================================== */
 
     .stButton > button {
         border-radius: 12px;
@@ -469,6 +475,37 @@ st.markdown(
         background: #267a40;
         color: white;
         font-weight: 700;
+    }
+
+
+    /* ======================================================
+       MOBILE RESPONSIVENESS
+    ====================================================== */
+
+    @media (max-width: 768px) {
+
+        .hero {
+            padding: 30px 25px;
+            border-radius: 20px;
+        }
+
+        .hero-title {
+            font-size: 34px;
+        }
+
+        .hero-text {
+            font-size: 15px;
+        }
+
+        .hero::before {
+            font-size: 90px;
+            right: 10px;
+        }
+
+        .hero::after {
+            font-size: 80px;
+            right: 90px;
+        }
     }
 
     </style>
@@ -504,7 +541,9 @@ with st.sidebar:
 
             <div class="sidebar-stat">
                 <span>AI Engine</span>
-                <span><span class="status-dot"></span>Ready</span>
+                <span>
+                    <span class="status-dot"></span>Ready
+                </span>
             </div>
 
             <div class="sidebar-stat">
@@ -545,7 +584,11 @@ with st.sidebar:
         <div class="sidebar-card">
             <div class="sidebar-card-title">🤖 How It Works</div>
 
-            <div style="font-size:13px; line-height:1.65; opacity:0.85;">
+            <div style="
+                font-size:13px;
+                line-height:1.65;
+                opacity:0.85;
+            ">
                 1. Upload a crop leaf image.<br>
                 2. AI preprocesses the image.<br>
                 3. Deep learning model analyzes the leaf.<br>
@@ -577,37 +620,41 @@ with st.sidebar:
 # HERO SECTION
 # ============================================================
 
-st.markdown(
-    """
-    <div class="hero">
+hero_html = """
+<div class="hero">
 
-        <div class="hero-badge">
-            ✦ AI-POWERED SMART AGRICULTURE PLATFORM
-        </div>
-
-        <h1 class="hero-title">
-            Protecting Crops with
-            <span>Intelligent Vision</span>
-        </h1>
-
-        <div class="hero-text">
-            Upload a cassava or maize leaf and let our automated
-            deep-learning system analyze it for potential diseases.
-            Designed to support faster crop monitoring, early detection,
-            and smarter agricultural decisions.
-        </div>
-
-        <div class="hero-pills">
-            <div class="hero-pill">🌿 Cassava Detection</div>
-            <div class="hero-pill">🌽 Maize Detection</div>
-            <div class="hero-pill">🧠 Deep Learning</div>
-            <div class="hero-pill">⚡ Automated Analysis</div>
-        </div>
-
+    <div class="hero-badge">
+        ✦ AI-POWERED SMART AGRICULTURE PLATFORM
     </div>
-    """,
-    unsafe_allow_html=True,
-)
+
+    <h1 class="hero-title">
+        Protecting Crops with
+        <span>Intelligent Vision</span>
+    </h1>
+
+    <div class="hero-text">
+        Upload a cassava or maize leaf and let our automated
+        deep-learning system analyze it for potential diseases.
+        Designed to support faster crop monitoring, early detection,
+        and smarter agricultural decisions.
+    </div>
+
+    <div class="hero-pills">
+        <div class="hero-pill">🌿 Cassava Detection</div>
+        <div class="hero-pill">🌽 Maize Detection</div>
+        <div class="hero-pill">🧠 Deep Learning</div>
+        <div class="hero-pill">⚡ Automated Analysis</div>
+    </div>
+
+</div>
+"""
+
+# Streamlit versions with st.html use the dedicated HTML renderer.
+# Older versions fall back to st.markdown.
+if hasattr(st, "html"):
+    st.html(hero_html)
+else:
+    st.markdown(hero_html, unsafe_allow_html=True)
 
 
 # ============================================================
@@ -617,7 +664,11 @@ st.markdown(
 st.markdown(
     """
     <div class="section-label">SMART FARMING</div>
-    <div class="section-title">What can AgroVision analyze?</div>
+
+    <div class="section-title">
+        What can AgroVision analyze?
+    </div>
+
     <div class="section-description">
         The system is designed to identify diseases affecting important
         agricultural crops using leaf-image classification.
@@ -629,31 +680,46 @@ st.markdown(
 crop_col1, crop_col2 = st.columns(2)
 
 with crop_col1:
+
     st.markdown(
         """
         <div class="crop-card">
+
             <div class="crop-icon">🌿</div>
-            <div class="crop-name">Cassava</div>
+
+            <div class="crop-name">
+                Cassava
+            </div>
+
             <div class="crop-description">
                 Analyze cassava leaves for visible disease patterns and
                 automatically classify the detected condition using the
                 trained computer-vision model.
             </div>
+
         </div>
         """,
         unsafe_allow_html=True,
     )
 
+
 with crop_col2:
+
     st.markdown(
         """
         <div class="crop-card">
+
             <div class="crop-icon">🌽</div>
-            <div class="crop-name">Maize</div>
+
+            <div class="crop-name">
+                Maize
+            </div>
+
             <div class="crop-description">
                 Screen maize leaf images for disease symptoms and receive
                 an automated classification together with model confidence.
             </div>
+
         </div>
         """,
         unsafe_allow_html=True,
@@ -664,51 +730,159 @@ st.write("")
 
 
 # ============================================================
-# LOAD MODEL
+# LOAD MODEL AND METADATA
 # ============================================================
 
-@st.cache_resource
+@st.cache_resource(show_spinner="Loading AgroVision AI model...")
 def load_everything():
 
-    for p in (CLASS_NAMES_PATH, METADATA_PATH):
+    # --------------------------------------------------------
+    # Check required local files
+    # --------------------------------------------------------
 
-        if not p.exists():
-            raise FileNotFoundError(
-                f"{p.name} not found next to app.py. "
-                f"Make sure class_names.json and metadata.json "
-                f"are in the same folder and committed to GitHub."
-            )
+    missing_files = []
 
-    class_names = json.loads(
-        CLASS_NAMES_PATH.read_text()
-    )
+    if not CLASS_NAMES_PATH.exists():
+        missing_files.append("class_names.json")
 
-    metadata = json.loads(
-        METADATA_PATH.read_text()
-    )
+    if not METADATA_PATH.exists():
+        missing_files.append("metadata.json")
 
-    best_model_name = metadata["best_model"]
+    if missing_files:
+        raise FileNotFoundError(
+            "The following required files are missing: "
+            + ", ".join(missing_files)
+            + ". Make sure they are in the same GitHub folder as app.py."
+        )
+
+    # --------------------------------------------------------
+    # Read class names
+    # --------------------------------------------------------
+
+    try:
+
+        with open(
+            CLASS_NAMES_PATH,
+            "r",
+            encoding="utf-8",
+        ) as f:
+
+            class_names = json.load(f)
+
+    except json.JSONDecodeError as e:
+
+        raise ValueError(
+            f"class_names.json contains invalid JSON: {e}"
+        )
+
+
+    # --------------------------------------------------------
+    # Read metadata
+    # --------------------------------------------------------
+
+    try:
+
+        with open(
+            METADATA_PATH,
+            "r",
+            encoding="utf-8",
+        ) as f:
+
+            metadata = json.load(f)
+
+    except json.JSONDecodeError as e:
+
+        raise ValueError(
+            f"metadata.json contains invalid JSON: {e}"
+        )
+
+
+    # --------------------------------------------------------
+    # Validate class names
+    # --------------------------------------------------------
+
+    if not isinstance(class_names, list) or len(class_names) == 0:
+
+        raise ValueError(
+            "class_names.json must contain a non-empty list of class names."
+        )
+
+
+    # --------------------------------------------------------
+    # Get model architecture
+    # --------------------------------------------------------
+
+    best_model_name = metadata.get("best_model")
+
+    if not best_model_name:
+
+        raise ValueError(
+            "metadata.json does not contain the 'best_model' field."
+        )
+
 
     if best_model_name not in PREPROCESS_FUNCS:
 
         raise ValueError(
             f"metadata.json says best_model='{best_model_name}', "
-            f"but that's not one of {list(PREPROCESS_FUNCS)}. "
-            f"Update PREPROCESS_FUNCS to match the training notebook."
+            f"but the app supports only: "
+            f"{list(PREPROCESS_FUNCS.keys())}"
         )
+
+
+    # --------------------------------------------------------
+    # Get image size
+    # --------------------------------------------------------
+
+    image_size = metadata.get("image_size")
+
+    if not image_size:
+
+        raise ValueError(
+            "metadata.json does not contain the 'image_size' field."
+        )
+
+
+    if not isinstance(image_size, (list, tuple)) or len(image_size) != 2:
+
+        raise ValueError(
+            "metadata.json 'image_size' must contain two values, "
+            "for example [224, 224]."
+        )
+
+
+    img_size = (
+        int(image_size[0]),
+        int(image_size[1]),
+    )
+
+
+    # --------------------------------------------------------
+    # Select preprocessing function
+    # --------------------------------------------------------
 
     preprocess_fn = PREPROCESS_FUNCS[best_model_name]
 
-    img_size = tuple(metadata["image_size"])
 
-    from huggingface_hub import hf_hub_download
+    # --------------------------------------------------------
+    # Download model from Hugging Face
+    # --------------------------------------------------------
 
     model_path = hf_hub_download(
         repo_id=HF_REPO_ID,
         filename=HF_MODEL_FILENAME,
     )
 
-    model = tf.keras.models.load_model(model_path)
+
+    # --------------------------------------------------------
+    # Load Keras model
+    # --------------------------------------------------------
+
+    model = tf.keras.models.load_model(
+        model_path,
+        compile=False,
+    )
+
 
     return (
         model,
@@ -716,47 +890,6 @@ def load_everything():
         preprocess_fn,
         img_size,
         best_model_name,
-    )
-
-
-# ============================================================
-# PREDICTION
-# ============================================================
-
-def predict(
-    model,
-    class_names,
-    preprocess_fn,
-    img_size,
-    pil_image,
-):
-
-    img = (
-        pil_image
-        .convert("RGB")
-        .resize(img_size)
-    )
-
-    x = np.expand_dims(
-        np.array(img, dtype=np.float32),
-        axis=0,
-    )
-
-    x = preprocess_fn(x)
-
-    preds = model.predict(
-        x,
-        verbose=0,
-    )[0]
-
-    top_idx = int(
-        np.argmax(preds)
-    )
-
-    return (
-        class_names[top_idx],
-        float(preds[top_idx]),
-        preds,
     )
 
 
@@ -772,18 +905,27 @@ try:
         preprocess_fn,
         img_size,
         best_model_name,
+
     ) = load_everything()
+
 
 except Exception as e:
 
     st.error(
-        f"Could not load the AI model or metadata: {e}"
+        "⚠️ AgroVision AI could not load the model."
     )
 
-    st.info(
-        "Check your Hugging Face repository ID, model.keras "
-        "file, class_names.json, and metadata.json."
+    st.warning(
+        "Please check that your GitHub files and Hugging Face "
+        "model repository are correctly configured."
     )
+
+    with st.expander("Technical details"):
+
+        st.code(
+            str(e),
+            language="text",
+        )
 
     st.stop()
 
@@ -794,37 +936,73 @@ except Exception as e:
 
 m1, m2, m3 = st.columns(3)
 
+
 with m1:
+
     st.markdown(
         f"""
         <div class="metric-card">
-            <div class="metric-icon">🧠</div>
-            <div class="metric-title">AI Architecture</div>
-            <div class="metric-value">{best_model_name}</div>
+
+            <div class="metric-icon">
+                🧠
+            </div>
+
+            <div class="metric-title">
+                AI Architecture
+            </div>
+
+            <div class="metric-value">
+                {best_model_name}
+            </div>
+
         </div>
         """,
         unsafe_allow_html=True,
     )
+
 
 with m2:
+
     st.markdown(
-        f"""
+        """
         <div class="metric-card">
-            <div class="metric-icon">🌱</div>
-            <div class="metric-title">Crop Categories</div>
-            <div class="metric-value">Cassava + Maize</div>
+
+            <div class="metric-icon">
+                🌱
+            </div>
+
+            <div class="metric-title">
+                Crop Categories
+            </div>
+
+            <div class="metric-value">
+                Cassava + Maize
+            </div>
+
         </div>
         """,
         unsafe_allow_html=True,
     )
+
 
 with m3:
+
     st.markdown(
         f"""
         <div class="metric-card">
-            <div class="metric-icon">🔬</div>
-            <div class="metric-title">Classification Classes</div>
-            <div class="metric-value">{len(class_names)}</div>
+
+            <div class="metric-icon">
+                🔬
+            </div>
+
+            <div class="metric-title">
+                Classification Classes
+            </div>
+
+            <div class="metric-value">
+                {len(class_names)}
+            </div>
+
         </div>
         """,
         unsafe_allow_html=True,
@@ -833,6 +1011,116 @@ with m3:
 
 st.write("")
 st.write("")
+
+
+# ============================================================
+# PREDICTION FUNCTION
+# ============================================================
+
+def predict(
+    model,
+    class_names,
+    preprocess_fn,
+    img_size,
+    pil_image,
+):
+
+    # --------------------------------------------------------
+    # Prepare image
+    # --------------------------------------------------------
+
+    image = (
+        pil_image
+        .convert("RGB")
+        .resize(
+            img_size,
+            Image.Resampling.LANCZOS,
+        )
+    )
+
+
+    # --------------------------------------------------------
+    # Convert to NumPy array
+    # --------------------------------------------------------
+
+    image_array = np.asarray(
+        image,
+        dtype=np.float32,
+    )
+
+
+    # --------------------------------------------------------
+    # Add batch dimension
+    # --------------------------------------------------------
+
+    x = np.expand_dims(
+        image_array,
+        axis=0,
+    )
+
+
+    # --------------------------------------------------------
+    # Apply model-specific preprocessing
+    # --------------------------------------------------------
+
+    x = preprocess_fn(x)
+
+
+    # --------------------------------------------------------
+    # Prediction
+    # --------------------------------------------------------
+
+    predictions = model.predict(
+        x,
+        verbose=0,
+    )
+
+
+    if predictions is None or len(predictions) == 0:
+
+        raise ValueError(
+            "The AI model returned an empty prediction."
+        )
+
+
+    preds = np.asarray(
+        predictions[0],
+        dtype=np.float32,
+    )
+
+
+    # --------------------------------------------------------
+    # Validate output
+    # --------------------------------------------------------
+
+    if len(preds) != len(class_names):
+
+        raise ValueError(
+            "The model returned "
+            f"{len(preds)} predictions, but class_names.json "
+            f"contains {len(class_names)} classes."
+        )
+
+
+    # --------------------------------------------------------
+    # Find highest probability
+    # --------------------------------------------------------
+
+    top_idx = int(
+        np.argmax(preds)
+    )
+
+
+    confidence = float(
+        preds[top_idx]
+    )
+
+
+    return (
+        class_names[top_idx],
+        confidence,
+        preds,
+    )
 
 
 # ============================================================
@@ -841,8 +1129,14 @@ st.write("")
 
 st.markdown(
     """
-    <div class="section-label">AUTOMATED LEAF SCANNING</div>
-    <div class="section-title">Upload a crop leaf image</div>
+    <div class="section-label">
+        AUTOMATED LEAF SCANNING
+    </div>
+
+    <div class="section-title">
+        Upload a crop leaf image
+    </div>
+
     <div class="section-description">
         For the best results, upload a clear image where the leaf is
         visible and reasonably well lit.
@@ -851,9 +1145,14 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+
 uploaded = st.file_uploader(
     "Drag and drop a cassava or maize leaf image here",
-    type=["jpg", "jpeg", "png"],
+    type=[
+        "jpg",
+        "jpeg",
+        "png",
+    ],
     help="Supported formats: JPG, JPEG and PNG.",
 )
 
@@ -862,27 +1161,42 @@ uploaded = st.file_uploader(
 # ANALYSIS
 # ============================================================
 
-if uploaded:
+if uploaded is not None:
 
-    image = Image.open(uploaded)
+    try:
+
+        image = Image.open(uploaded)
+
+    except Exception:
+
+        st.error(
+            "The uploaded file could not be opened as an image."
+        )
+
+        st.stop()
+
 
     image_col, result_col = st.columns(
         [1, 1.15],
         gap="large",
     )
 
-    # --------------------------------------------------------
-    # IMAGE
-    # --------------------------------------------------------
+
+    # ========================================================
+    # INPUT IMAGE
+    # ========================================================
 
     with image_col:
 
         st.markdown(
             """
-            <div class="section-label">INPUT IMAGE</div>
+            <div class="section-label">
+                INPUT IMAGE
+            </div>
             """,
             unsafe_allow_html=True,
         )
+
 
         st.image(
             image,
@@ -890,35 +1204,65 @@ if uploaded:
             use_container_width=True,
         )
 
+
         st.markdown(
             f"""
             <div class="info-box">
+
                 <strong>📷 Image received</strong><br>
-                Resolution: {image.width} × {image.height}px<br>
-                Format: {image.format or "Image"}
+
+                Resolution:
+                {image.width} × {image.height}px
+                <br>
+
+                Format:
+                {image.format or "Image"}
+
             </div>
             """,
             unsafe_allow_html=True,
         )
 
 
-    # --------------------------------------------------------
-    # PREDICTION
-    # --------------------------------------------------------
+    # ========================================================
+    # RUN PREDICTION
+    # ========================================================
 
-    label, confidence, all_preds = predict(
-        model,
-        class_names,
-        preprocess_fn,
-        img_size,
-        image,
-    )
+    try:
 
-    # Labels are expected to be:
-    #
-    # cassava__cbb
-    # maize__healthy
-    #
+        (
+            label,
+            confidence,
+            all_preds,
+
+        ) = predict(
+            model,
+            class_names,
+            preprocess_fn,
+            img_size,
+            image,
+        )
+
+    except Exception as e:
+
+        st.error(
+            "⚠️ The AI model could not analyze this image."
+        )
+
+        with st.expander("Technical details"):
+
+            st.code(
+                str(e),
+                language="text",
+            )
+
+        st.stop()
+
+
+    # ========================================================
+    # PROCESS LABEL
+    # ========================================================
+
     if "__" in label:
 
         crop, condition = label.split(
@@ -932,49 +1276,67 @@ if uploaded:
         condition = label
 
 
-    clean_crop = crop.replace("_", " ").title()
-    clean_condition = condition.replace("_", " ").title()
+    clean_crop = (
+        crop
+        .replace("_", " ")
+        .title()
+    )
+
+
+    clean_condition = (
+        condition
+        .replace("_", " ")
+        .title()
+    )
+
 
     confidence_percent = confidence * 100
 
 
-    # --------------------------------------------------------
-    # RESULT CARD
-    # --------------------------------------------------------
+    # ========================================================
+    # HEALTH STATUS
+    # ========================================================
 
     is_healthy = (
         "healthy" in condition.lower()
         or "normal" in condition.lower()
     )
 
-    result_class = (
-        "healthy-result"
-        if is_healthy
-        else "disease-result"
-    )
 
-    result_icon = (
-        "✅"
-        if is_healthy
-        else "⚠️"
-    )
+    if is_healthy:
 
-    result_message = (
-        "The AI model did not detect a disease pattern."
-        if is_healthy
-        else
-        "The AI model detected a disease-associated pattern."
-    )
+        result_class = "healthy-result"
+        result_icon = "✅"
 
+        result_message = (
+            "The AI model did not detect a disease pattern."
+        )
+
+    else:
+
+        result_class = "disease-result"
+        result_icon = "⚠️"
+
+        result_message = (
+            "The AI model detected a disease-associated pattern."
+        )
+
+
+    # ========================================================
+    # RESULT CARD
+    # ========================================================
 
     with result_col:
 
         st.markdown(
             """
-            <div class="section-label">AI DIAGNOSIS</div>
+            <div class="section-label">
+                AI DIAGNOSIS
+            </div>
             """,
             unsafe_allow_html=True,
         )
+
 
         st.markdown(
             f"""
@@ -1019,11 +1381,12 @@ if uploaded:
         )
 
 
-        # ----------------------------------------------------
-        # CONFIDENCE
-        # ----------------------------------------------------
+        # ====================================================
+        # CONFIDENCE CARD
+        # ====================================================
 
         st.write("")
+
 
         st.markdown(
             f"""
@@ -1036,6 +1399,7 @@ if uploaded:
                 ">
 
                     <div>
+
                         <div class="metric-title">
                             MODEL CONFIDENCE
                         </div>
@@ -1043,6 +1407,7 @@ if uploaded:
                         <div class="metric-value">
                             {confidence_percent:.1f}%
                         </div>
+
                     </div>
 
                     <div style="
@@ -1053,6 +1418,7 @@ if uploaded:
 
                 </div>
 
+
                 <div style="
                     background:#e7eee8;
                     height:10px;
@@ -1062,7 +1428,7 @@ if uploaded:
                 ">
 
                     <div style="
-                        width:{min(confidence_percent, 100):.1f}%;
+                        width:{min(max(confidence_percent, 0), 100):.1f}%;
                         height:100%;
                         border-radius:20px;
                         background:
@@ -1081,19 +1447,24 @@ if uploaded:
         )
 
 
-# ============================================================
-# ALL CLASS PROBABILITIES
-# ============================================================
+    # ========================================================
+    # ALL CLASS PROBABILITIES
+    # ========================================================
 
     st.write("")
     st.write("")
+
 
     st.markdown(
         """
-        <div class="section-label">MODEL INSIGHTS</div>
+        <div class="section-label">
+            MODEL INSIGHTS
+        </div>
+
         <div class="section-title">
             Classification probability
         </div>
+
         <div class="section-description">
             Probability assigned to each disease class by the AI model.
         </div>
@@ -1101,16 +1472,25 @@ if uploaded:
         unsafe_allow_html=True,
     )
 
+
     probability_col1, probability_col2 = st.columns(
         [1.2, 1],
         gap="large",
     )
 
+
     sorted_predictions = sorted(
-        zip(class_names, all_preds),
-        key=lambda p: -p[1],
+        zip(
+            class_names,
+            all_preds,
+        ),
+        key=lambda p: -float(p[1]),
     )
 
+
+    # ========================================================
+    # PROBABILITY BARS
+    # ========================================================
 
     with probability_col1:
 
@@ -1123,7 +1503,9 @@ if uploaded:
                 .title()
             )
 
+
             percentage = float(prob) * 100
+
 
             st.markdown(
                 f"""
@@ -1153,6 +1535,7 @@ if uploaded:
 
                     </div>
 
+
                     <div style="
                         height:8px;
                         background:#e6eee7;
@@ -1161,7 +1544,7 @@ if uploaded:
                     ">
 
                         <div style="
-                            width:{min(percentage, 100):.2f}%;
+                            width:{min(max(percentage, 0), 100):.2f}%;
                             height:100%;
                             border-radius:20px;
                             background:
@@ -1180,7 +1563,18 @@ if uploaded:
             )
 
 
+    # ========================================================
+    # ANALYSIS SUMMARY
+    # ========================================================
+
     with probability_col2:
+
+        crop_icon = (
+            "🌿"
+            if crop.lower() == "cassava"
+            else "🌽"
+        )
+
 
         st.markdown(
             f"""
@@ -1189,18 +1583,23 @@ if uploaded:
                 <div style="
                     font-size:42px;
                 ">
-                    {"🌿" if crop.lower() == "cassava" else "🌽"}
+                    {crop_icon}
                 </div>
+
 
                 <div class="crop-name">
                     Automated Farm Intelligence
                 </div>
 
+
                 <div class="crop-description">
+
                     AgroVision uses computer vision and a trained
                     deep-learning model to analyze leaf characteristics
                     and estimate the most likely crop health condition.
+
                 </div>
+
 
                 <div style="
                     height:1px;
@@ -1208,19 +1607,39 @@ if uploaded:
                     margin:18px 0;
                 "></div>
 
+
                 <div style="
                     font-size:12px;
                     color:#718076;
                     line-height:1.7;
                 ">
-                    <strong style="color:#356843;">
-                        Current analysis
-                    </strong><br>
 
-                    Crop: {clean_crop}<br>
-                    Diagnosis: {clean_condition}<br>
-                    Confidence: {confidence_percent:.1f}%<br>
-                    AI model: {best_model_name}
+                    <strong style="
+                        color:#356843;
+                    ">
+                        Current analysis
+                    </strong>
+
+                    <br>
+
+                    Crop:
+                    {clean_crop}
+
+                    <br>
+
+                    Diagnosis:
+                    {clean_condition}
+
+                    <br>
+
+                    Confidence:
+                    {confidence_percent:.1f}%
+
+                    <br>
+
+                    AI model:
+                    {best_model_name}
+
                 </div>
 
             </div>
@@ -1239,7 +1658,11 @@ else:
         """
         <div class="info-box">
 
-            <strong>🌱 Ready for automated crop analysis?</strong><br>
+            <strong>
+                🌱 Ready for automated crop analysis?
+            </strong>
+
+            <br>
 
             Upload a clear cassava or maize leaf image above.
             The AI system will automatically process the image,
@@ -1259,14 +1682,25 @@ else:
 st.markdown(
     """
     <div class="footer">
-        <strong>🌿 AgroVision AI</strong>
+
+        <strong>
+            🌿 AgroVision AI
+        </strong>
+
         &nbsp;•&nbsp;
+
         Intelligent Crop Disease Diagnosis
+
         &nbsp;•&nbsp;
+
         Smart Agriculture & Computer Vision
+
         <br>
+
         Built for automated cassava and maize crop monitoring.
+
     </div>
     """,
     unsafe_allow_html=True,
 )
+```
