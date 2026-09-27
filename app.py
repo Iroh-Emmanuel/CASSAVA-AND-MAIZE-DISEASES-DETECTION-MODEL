@@ -6,6 +6,7 @@ model class labels used by class_names.json / metadata.json.
 
 import json
 import os
+from textwrap import dedent
 from pathlib import Path
 
 import numpy as np
@@ -24,6 +25,11 @@ LOCAL_MODEL_PATH = APP_DIR / "model.keras"
 # Exact Hugging Face repository containing model.keras
 HF_REPO_ID = "Iroh-Emmanuel/CASSAVA-AND-MAIZE-DISEASES-DETECTION-MODEL"
 HF_MODEL_FILENAME = "model.keras"
+
+
+def render_html(html, **kwargs):
+    """Render an HTML fragment without Markdown indentation turning it into code."""
+    st.markdown(dedent(html).strip(), unsafe_allow_html=True)
 
 
 PREPROCESS_FUNCS = {
@@ -92,7 +98,7 @@ st.set_page_config(
 # ---------------------------------------------------------------------------
 # CUSTOM STYLING
 # ---------------------------------------------------------------------------
-st.markdown(
+render_html(
     """
     <style>
     .stApp{
@@ -394,7 +400,7 @@ st.markdown(
 # SIDEBAR
 # ---------------------------------------------------------------------------
 with st.sidebar:
-    st.markdown(
+    render_html(
         """
         <div class="sidebar-brand">
             <div class="sidebar-logo">🌿</div>
@@ -408,7 +414,7 @@ with st.sidebar:
         unsafe_allow_html=True,
     )
 
-    st.markdown(
+    render_html(
         """
         <div class="sidebar-card">
             <div class="sidebar-card-title">⚡ System Status</div>
@@ -429,7 +435,7 @@ with st.sidebar:
         unsafe_allow_html=True,
     )
 
-    st.markdown(
+    render_html(
         """
         <div class="sidebar-card">
             <div class="sidebar-card-title">🌾 Supported Crops</div>
@@ -444,7 +450,7 @@ with st.sidebar:
         unsafe_allow_html=True,
     )
 
-    st.markdown(
+    render_html(
         """
         <div class="sidebar-card">
             <div class="sidebar-card-title">🤖 How It Works</div>
@@ -464,7 +470,7 @@ with st.sidebar:
 # ---------------------------------------------------------------------------
 # HERO SECTION
 # ---------------------------------------------------------------------------
-st.markdown(
+render_html(
     """
     <div class="hero">
         <div class="hero-badge">
@@ -497,7 +503,7 @@ st.markdown(
 # ---------------------------------------------------------------------------
 # SUPPORTED CROPS
 # ---------------------------------------------------------------------------
-st.markdown(
+render_html(
     """
     <div class="section-label">SMART FARMING</div>
     <div class="section-title">What can AgroVision analyze?</div>
@@ -512,7 +518,7 @@ st.markdown(
 c1, c2 = st.columns(2)
 
 with c1:
-    st.markdown(
+    render_html(
         """
         <div class="crop-card">
             <div class="crop-icon">🌿</div>
@@ -528,7 +534,7 @@ with c1:
     )
 
 with c2:
-    st.markdown(
+    render_html(
         """
         <div class="crop-card">
             <div class="crop-icon">🌽</div>
@@ -767,7 +773,7 @@ except Exception as e:
 m1, m2, m3 = st.columns(3)
 
 with m1:
-    st.markdown(
+    render_html(
         f"""
         <div class="metric-card">
             <div class="metric-icon">🧠</div>
@@ -779,7 +785,7 @@ with m1:
     )
 
 with m2:
-    st.markdown(
+    render_html(
         """
         <div class="metric-card">
             <div class="metric-icon">🌱</div>
@@ -791,7 +797,7 @@ with m2:
     )
 
 with m3:
-    st.markdown(
+    render_html(
         f"""
         <div class="metric-card">
             <div class="metric-icon">🔬</div>
@@ -808,7 +814,7 @@ st.write("")
 # ---------------------------------------------------------------------------
 # IMAGE UPLOAD
 # ---------------------------------------------------------------------------
-st.markdown(
+render_html(
     """
     <div class="section-label">AUTOMATED LEAF SCANNING</div>
     <div class="section-title">Upload a crop leaf image</div>
@@ -840,7 +846,7 @@ if uploaded:
     image_col, result_col = st.columns([1, 1.15], gap="large")
 
     with image_col:
-        st.markdown(
+        render_html(
             '<div class="section-label">INPUT IMAGE</div>',
             unsafe_allow_html=True,
         )
@@ -851,7 +857,7 @@ if uploaded:
             use_container_width=True,
         )
 
-        st.markdown(
+        render_html(
             f"""
             <div class="info-box">
                 <strong>📷 Image received</strong><br>
@@ -910,12 +916,12 @@ if uploaded:
     # DIAGNOSIS CARD
     # -----------------------------------------------------------------------
     with result_col:
-        st.markdown(
+        render_html(
             '<div class="section-label">AI DIAGNOSIS</div>',
             unsafe_allow_html=True,
         )
 
-        st.markdown(
+        render_html(
             f"""
             <div class="result-card {result_class}">
                 <div style="font-size:42px;margin-bottom:8px">
@@ -954,7 +960,7 @@ if uploaded:
 
         st.write("")
 
-        st.markdown(
+        render_html(
             f"""
             <div class="metric-card">
                 <div style="
@@ -1006,7 +1012,7 @@ if uploaded:
     st.write("")
     st.write("")
 
-    st.markdown(
+    render_html(
         """
         <div class="section-label">MODEL INSIGHTS</div>
         <div class="section-title">Classification probability</div>
@@ -1031,7 +1037,7 @@ if uploaded:
             # Convert raw model labels to full display labels.
             display_name = get_display_label(name)
 
-            st.markdown(
+            render_html(
                 f"""
                 <div style="margin:13px 0">
                     <div style="
@@ -1076,7 +1082,7 @@ if uploaded:
             )
 
     with pc2:
-        st.markdown(
+        render_html(
             f"""
             <div class="crop-card">
                 <div style="font-size:42px">
@@ -1120,7 +1126,7 @@ if uploaded:
         )
 
 else:
-    st.markdown(
+    render_html(
         """
         <div class="info-box">
             <strong>🌱 Ready for automated crop analysis?</strong><br>
@@ -1136,7 +1142,7 @@ else:
 # ---------------------------------------------------------------------------
 # FOOTER
 # ---------------------------------------------------------------------------
-st.markdown(
+render_html(
     """
     <div class="footer">
         <strong>🌿 AgroVision AI</strong>
