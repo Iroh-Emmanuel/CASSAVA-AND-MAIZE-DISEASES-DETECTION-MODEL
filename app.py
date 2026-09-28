@@ -32,6 +32,9 @@ DISEASE_FULL_NAMES = {
     "CBB": "Cassava Bacterial Blight",
     "CMD": "Cassava Mosaic Disease",
     "CGM": "Cassava Green Mite",
+    "BLIGHT": "Maize Leaf Blight",
+    "GRAY LEAF SPOT": "Maize Gray Leaf Spot",
+    "COMMON RUST": "Maize Common Rust",
     "HEALTHY": "Healthy Cassava Leaf",
 }
 
@@ -207,7 +210,10 @@ if uploaded:
     crop,condition=label.split("__",1) if "__" in label else ("Unknown",label)
     clean_crop=crop.replace("_"," ").title()
     condition_key=condition.replace("_"," ").strip().upper()
-    clean_condition=DISEASE_FULL_NAMES.get(condition_key, condition.replace("_"," ").title())
+    if crop.lower() == "maize" and condition_key == "HEALTHY":
+        clean_condition = "Healthy Maize Leaf"
+    else:
+        clean_condition = DISEASE_FULL_NAMES.get(condition_key, condition.replace("_"," ").title())
     confidence_percent=confidence*100
     is_healthy="healthy" in condition.lower() or "normal" in condition.lower()
     result_class="healthy-result" if is_healthy else "disease-result"
@@ -226,8 +232,13 @@ if uploaded:
     sorted_predictions=sorted(zip(class_names,all_preds),key=lambda p:-p[1])
     with pc1:
         for name,prob in sorted_predictions:
-            abbreviation=name.split("__")[-1].replace("_"," ").strip().upper()
-            display_name=DISEASE_FULL_NAMES.get(abbreviation, name.replace("__"," → ").replace("_"," ").title())
+            prediction_parts = name.split("__", 1)
+            prediction_crop = prediction_parts[0].strip().lower() if len(prediction_parts) > 1 else ""
+            abbreviation = prediction_parts[-1].replace("_"," ").strip().upper()
+            if prediction_crop == "maize" and abbreviation == "HEALTHY":
+                display_name = "Healthy Maize Leaf"
+            else:
+                display_name = DISEASE_FULL_NAMES.get(abbreviation, name.replace("__"," → ").replace("_"," ").title())
             percentage=float(prob)*100
             st.markdown(f'<div style="margin:13px 0"><div style="display:flex;justify-content:space-between;margin-bottom:5px;font-size:13px"><span style="color:#36543e;font-weight:600">{display_name}</span><strong style="color:#267a40">{percentage:.2f}%</strong></div><div style="height:8px;background:#e6eee7;border-radius:20px;overflow:hidden"><div style="width:{min(percentage,100):.2f}%;height:100%;border-radius:20px;background:linear-gradient(90deg,#9ccc65,#2e7d32)"></div></div></div>',unsafe_allow_html=True)
     with pc2:
