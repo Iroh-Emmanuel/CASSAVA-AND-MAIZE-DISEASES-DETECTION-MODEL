@@ -215,21 +215,22 @@ if uploaded:
     pc1,pc2=st.columns([1.2,1],gap="large")
     sorted_predictions=sorted(zip(class_names,all_preds),key=lambda p:-p[1])
     with pc1:
-        for name,prob in sorted_predictions:
-            display_names = {
-    "CBSD": "Cassava Brown Streak Disease",
-    "CBB": "Cassava Bacterial Blight",
-    "CMD": "Cassava Mosaic Disease",
-    "CGM": "Cassava Green Mite",
-    "Healthy": "Healthy Cassava Leaf",
-}
+    for name,prob in sorted_predictions:
+        display_names = {
+            "CBSD": "Cassava Brown Streak Disease",
+            "CBB": "Cassava Bacterial Blight",
+            "CMD": "Cassava Mosaic Disease",
+            "CGM": "Cassava Green Mite",
+            "HEALTHY": "Healthy Cassava Leaf",
+        }
 
-abbreviation = name.split("__")[-1].replace("_", " ").strip().title()
-display_name = display_names.get(abbreviation, abbreviation)
-percentage=float(prob)*100
-            st.markdown(f'<div style="margin:13px 0"><div style="display:flex;justify-content:space-between;margin-bottom:5px;font-size:13px"><span style="color:#36543e;font-weight:600">{display_name}</span><strong style="color:#267a40">{percentage:.2f}%</strong></div><div style="height:8px;background:#e6eee7;border-radius:20px;overflow:hidden"><div style="width:{min(percentage,100):.2f}%;height:100%;border-radius:20px;background:linear-gradient(90deg,#9ccc65,#2e7d32)"></div></div></div>',unsafe_allow_html=True)
-    with pc2:
-        st.markdown(f'<div class="crop-card"><div style="font-size:42px">{"🌿" if crop.lower()=="cassava" else "🌽"}</div><div class="crop-name">Automated Farm Intelligence</div><div class="crop-description">AgroVision uses computer vision and a trained deep-learning model to analyze leaf characteristics and estimate the most likely crop health condition.</div><div style="height:1px;background:#e4ece5;margin:18px 0"></div><div style="font-size:12px;color:#718076;line-height:1.7"><strong style="color:#356843">Current analysis</strong><br>Crop: {clean_crop}<br>Diagnosis: {clean_condition}<br>Confidence: {confidence_percent:.1f}%<br>AI model: {best_model_name}<br>Model source: {model_source}</div></div>',unsafe_allow_html=True)
+        abbreviation = name.split("__")[-1].strip().upper()
+        display_name = display_names.get(abbreviation, abbreviation.replace("_", " ").title())
+        percentage = float(prob) * 100
+
+        st.markdown(f'<div style="margin:13px 0"><div style="display:flex;justify-content:space-between;margin-bottom:5px;font-size:13px"><span style="color:#36543e;font-weight:600">{display_name}</span><strong style="color:#267a40">{percentage:.2f}%</strong></div><div style="height:8px;background:#e6eee7;border-radius:20px;overflow:hidden"><div style="width:{min(percentage,100):.2f}%;height:100%;border-radius:20px;background:linear-gradient(90deg,#9ccc65,#2e7d32)"></div></div></div>', unsafe_allow_html=True)
+
+with pc2:        st.markdown(f'<div class="crop-card"><div style="font-size:42px">{"🌿" if crop.lower()=="cassava" else "🌽"}</div><div class="crop-name">Automated Farm Intelligence</div><div class="crop-description">AgroVision uses computer vision and a trained deep-learning model to analyze leaf characteristics and estimate the most likely crop health condition.</div><div style="height:1px;background:#e4ece5;margin:18px 0"></div><div style="font-size:12px;color:#718076;line-height:1.7"><strong style="color:#356843">Current analysis</strong><br>Crop: {clean_crop}<br>Diagnosis: {clean_condition}<br>Confidence: {confidence_percent:.1f}%<br>AI model: {best_model_name}<br>Model source: {model_source}</div></div>',unsafe_allow_html=True)
 else:
     st.markdown('<div class="info-box"><strong>🌱 Ready for automated crop analysis?</strong><br>Upload a clear cassava or maize leaf image above. The AI system will automatically process the image, identify the most likely disease class, and display the model confidence score.</div>',unsafe_allow_html=True)
 
